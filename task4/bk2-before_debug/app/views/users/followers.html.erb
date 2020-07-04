@@ -1,0 +1,48 @@
+<div class="row">
+<h1>Follower Users</h1>
+
+		<!--users一覧 -->
+	<% if @users.any? %>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>image</th>
+					<th>name</th>
+					<th colspan="4"></th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<% @users.each do |user| %>
+				<tr>
+					<td class="col-xs-1">
+						<%= link_to user_path(user) do %>
+						<%= attachment_image_tag(user, :profile_image, :fill, 50, 50, fallback: "no-image-mini.jpg") %>
+						<% end %>
+					</td>
+					<td class="col-xs-3"><%= user.name %></td>
+					<td class="col-xs-2"><p><%=link_to "フォロー数：", follows_user_path(user.id) %><%= user.followings.count %></p></td>
+					<td class="col-xs-2"><p><%=link_to "フォロワー数：", followers_user_path(user.id) %><%= user.followers.count %></p></td>
+					<td class="col-xs-2">
+						<% if current_user != user %>
+					        <% if user.followed_by?(current_user) %>
+					            <p><%=link_to "フォロー外す", user_relationships_path(user.id), method: :delete %></p>
+					        <% else %>
+					            <p><%=link_to "フォローする", user_relationships_path(user.id), method: :post %></p>
+					        <% end %>
+					    <% end %>
+					</td>
+					<td class="col-xs-2"><%= link_to "Show", user_path(user), class: "user_#{user.id}" %></td>
+				</tr>
+				<% end %>
+			</tbody>
+		</table>
+
+
+	<% else %>
+
+	<h3>ユーザーはいません</h3>
+
+		<% end %>
+		<!--users一覧 -->
+</div>
